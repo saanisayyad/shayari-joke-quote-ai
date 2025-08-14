@@ -6,10 +6,10 @@ import { GoogleGenAI } from "@google/genai";
 dotenv.config();
 const app = express();
 app.use(cors({
-  origin:['https://shayari-joke-quote-ai-mds.vercel.app/']
+  origin:['https://shayari-joke-quote-ai-mds.vercel.app']
 }));
 app.use(express.json());
-  
+
 const ai = new GoogleGenAI({
   apiKey: process.env.API_KEY
 });

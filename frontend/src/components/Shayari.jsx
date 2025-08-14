@@ -8,7 +8,7 @@ const Shayari = ({showMessage}) => {
     const fetchShayari = async () => {
     try {
       setLoading(true);
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/shayari`);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/shayari`);
       setShayari(res.data.text);
     } catch (error) {
       setShayari("Failed to fetch shayari. Please try again!");

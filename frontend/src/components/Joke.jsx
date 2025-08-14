@@ -8,7 +8,7 @@ const Joke = ({showMessage}) => {
     const fetchJoke = async () => {
     try {
       setLoading(true);
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/joke`);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/joke`);
       setJoke(res.data.text);
     } catch (error) {
       setJoke("Failed to fetch joke. Please try again!");

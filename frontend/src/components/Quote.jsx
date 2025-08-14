@@ -8,7 +8,7 @@ const Quote = ({showMessage}) => {
     const fetchQuote = async () => {
     try {
       setLoading(true);
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/quote`);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/quote`);
       setQuote(res.data.text);
     } catch (error) {
       setQuote("Failed to fetch quote. Please try again!");
