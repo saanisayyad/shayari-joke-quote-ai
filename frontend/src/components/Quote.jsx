@@ -26,7 +26,7 @@ const Quote = ({showMessage}) => {
 
 
   return (
-    <div className='p-10 items-center mt-20 lg:mt-5 flex flex-col gap-10 rounded-3xl shadow-2xl border-t-6 border-gray-600 mx-auto w-3/4 md:w-1/2'>
+    <div className='p-10 lg:px-10 lg:py-6 items-center mt-20 lg:mt-5 flex flex-col gap-10 rounded-3xl shadow-2xl border-t-6 border-gray-600 mx-auto w-3/4 md:w-1/2'>
       <h1 className='text-white/70 text-xl md:text-3xl font-bold mx-auto py-2 px-3 border-gray-600 rounded-3xl border-r-4 border-l-4'>
         Quote Generator
       </h1> 

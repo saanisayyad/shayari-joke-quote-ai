@@ -6,6 +6,7 @@ import Shayari from "./components/Shayari";
 import Quote from "./components/Quote";
 import './index.css'
 import Home from "./components/Home";
+import Footer from "./components/Footer";
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -31,7 +32,7 @@ const displayMessage = () => {
           <Route path="/api/shayari" element={<Shayari showMessage={displayMessage} />} />
           <Route path="/api/quote" element={<Quote showMessage={displayMessage} />} />
         </Routes>
-
+        <Footer/>
     </div>
   );
 }
