@@ -27,9 +27,9 @@ const displayMessage = () => {
         <Navbar/>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/joke" element={<Joke showMessage={displayMessage} />} />
-          <Route path="/shayari" element={<Shayari showMessage={displayMessage} />} />
-          <Route path="/quote" element={<Quote showMessage={displayMessage} />} />
+          <Route path="/api/joke" element={<Joke showMessage={displayMessage} />} />
+          <Route path="/api/shayari" element={<Shayari showMessage={displayMessage} />} />
+          <Route path="/api/quote" element={<Quote showMessage={displayMessage} />} />
         </Routes>
 
     </div>
