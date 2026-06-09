@@ -1,18 +1,23 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";
 
 dotenv.config();
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.API_KEY
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
-// Prompt arrays
+// ======================
+// Prompts
+// ======================
+
 const shayariPrompt = `
 Generate one original emotional shayari.
 
@@ -25,15 +30,15 @@ Requirements:
 - Return only the shayari
 `;
 
-const jokePrompt = `
-Generate one original, clean, family-friendly dad joke.
+const pickupLinePrompt = `
+Generate one original pickup line.
 
 Requirements:
-- Maximum 2 lines
-- Funny and clever
-- No offensive content
-- Do not explain the joke
-- Return only the joke text
+- Hindi written in English script
+- Funny, cute, or romantic
+- One or two lines only
+- No emojis
+- Return only the pickup line
 `;
 
 const quotePrompt = `
@@ -47,70 +52,86 @@ Requirements:
 - Return only the quote
 `;
 
-function getRandomJokePrompt() {
-  return jokePrompts[Math.floor(Math.random() * jokePrompts.length)];
+// ======================
+// Helper Function
+// ======================
+
+async function generateContent(prompt) {
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.1-8b-instant",
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    temperature: 0.9,
+    max_tokens: 60,
+  });
+
+  return completion.choices[0].message.content.trim();
 }
 
-function getRandomShayariPrompt() {
-  return shayariPrompts[Math.floor(Math.random() * shayariPrompts.length)];
-}
+// ======================
+// Pickup Line API
+// ======================
 
-function getRandomQuotePrompt() {
-  return quotePrompts[Math.floor(Math.random() * quotePrompts.length)];
-}
-
-// API endpoint
 app.post("/api/joke", async (req, res) => {
   try {
-    const prompt = getRandomJokePrompt();
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.8,
-        maxOutputTokens: 50
-      }
-    });
+    const text = await generateContent(pickupLinePrompt);
 
-    res.json({ text:response.candidates[0].content.parts[0].text });
+    res.json({ text });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Pickup Line Error:", err);
+
+    res.status(500).json({
+      error: "Failed to generate pickup line",
+    });
   }
 });
+
+// ======================
+// Shayari API
+// ======================
 
 app.post("/api/shayari", async (req, res) => {
   try {
-    const prompt = getRandomShayariPrompt();
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.8,
-        maxOutputTokens: 50
-      }
-    });
+    const text = await generateContent(shayariPrompt);
 
-    res.json({ text:response.candidates[0].content.parts[0].text });
+    res.json({ text });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Shayari Error:", err);
+
+    res.status(500).json({
+      error: "Failed to generate shayari",
+    });
   }
 });
+
+// ======================
+// Quote API
+// ======================
 
 app.post("/api/quote", async (req, res) => {
   try {
-    const prompt = getRandomQuotePrompt();
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt
-    });
+    const text = await generateContent(quotePrompt);
 
-    res.json({ text:response.candidates[0].content.parts[0].text });
+    res.json({ text });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Quote Error:", err);
+
+    res.status(500).json({
+      error: "Failed to generate quote",
+    });
   }
 });
 
-app.listen(5000, () => console.log("Backend running on port 5000"));
+// ======================
+// Server
+// ======================
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
+});
