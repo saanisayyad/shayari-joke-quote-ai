@@ -1,23 +1,18 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import Groq from "groq-sdk";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
-
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
+const ai = new GoogleGenAI({
+  apiKey: process.env.API_KEY
 });
 
-// ======================
-// Prompts
-// ======================
-
+// Prompt arrays
 const shayariPrompt = `
 Generate one original emotional shayari.
 
@@ -30,7 +25,7 @@ Requirements:
 - Return only the shayari
 `;
 
-const pickupLinePrompt = `
+const jokePrompt = `
 Generate one original pickup line.
 
 Requirements:
@@ -52,86 +47,70 @@ Requirements:
 - Return only the quote
 `;
 
-// ======================
-// Helper Function
-// ======================
-
-async function generateContent(prompt) {
-  const completion = await groq.chat.completions.create({
-    model: "llama-3.1-8b-instant",
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-    temperature: 0.9,
-    max_tokens: 60,
-  });
-
-  return completion.choices[0].message.content.trim();
+function getRandomJokePrompt() {
+  return jokePrompts[Math.floor(Math.random() * jokePrompts.length)];
 }
 
-// ======================
-// Pickup Line API
-// ======================
+function getRandomShayariPrompt() {
+  return shayariPrompts[Math.floor(Math.random() * shayariPrompts.length)];
+}
 
+function getRandomQuotePrompt() {
+  return quotePrompts[Math.floor(Math.random() * quotePrompts.length)];
+}
+
+// API endpoint
 app.post("/api/joke", async (req, res) => {
   try {
-    const text = await generateContent(pickupLinePrompt);
-
-    res.json({ text });
-  } catch (err) {
-    console.error("Pickup Line Error:", err);
-
-    res.status(500).json({
-      error: "Failed to generate pickup line",
+    const prompt = getRandomJokePrompt();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        temperature: 0.8,
+        maxOutputTokens: 50
+      }
     });
+
+    res.json({ text:response.candidates[0].content.parts[0].text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
-
-// ======================
-// Shayari API
-// ======================
 
 app.post("/api/shayari", async (req, res) => {
   try {
-    const text = await generateContent(shayariPrompt);
-
-    res.json({ text });
-  } catch (err) {
-    console.error("Shayari Error:", err);
-
-    res.status(500).json({
-      error: "Failed to generate shayari",
+    const prompt = getRandomShayariPrompt();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        temperature: 0.8,
+        maxOutputTokens: 50
+      }
     });
+
+    res.json({ text:response.candidates[0].content.parts[0].text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
-
-// ======================
-// Quote API
-// ======================
 
 app.post("/api/quote", async (req, res) => {
   try {
-    const text = await generateContent(quotePrompt);
-
-    res.json({ text });
-  } catch (err) {
-    console.error("Quote Error:", err);
-
-    res.status(500).json({
-      error: "Failed to generate quote",
+    const prompt = getRandomQuotePrompt();
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt
     });
+
+    res.json({ text:response.candidates[0].content.parts[0].text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-// ======================
-// Server
-// ======================
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+app.listen(5000, () => console.log("Backend running on port 5000"));
