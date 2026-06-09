@@ -13,17 +13,39 @@ const ai = new GoogleGenAI({
 });
 
 // Prompt arrays
-const shayariPrompts = [
-  'You are a poetic genius who writes heartfelt and original shayari.Give one short, meaningful, and emotional shayari.Language must be Hindi or Urdu but the text must be English.It should be unique, never repeated, and have a touch of creativity or surprise.Focus on emotions like love, friendship, inspiration, or nature.Keep it concise (2-4 lines) and do not add explanations or extra commentary.Choose a new theme each time to make it feel fresh.'
-];
+const shayariPrompt = `
+Generate one original emotional shayari.
 
-const jokePrompts = [
-  'You are a witty dad who loves telling groan-worthy jokes.Write one original, clean, and family-friendly dad joke that has never been told before.It should be short, pun-based, and in classic dad-joke style.Each time, choose a random topic so the joke feels new and surprising.Avoid reusing jokes you’ve given before. Only return the joke itself, no explanations or introductions.'
-];
+Requirements:
+- Hindi or Urdu words written in English script
+- 2 to 4 lines only
+- Theme can be love, friendship, motivation, life, nature, or dreams
+- Deep and meaningful
+- No emojis
+- Return only the shayari
+`;
 
-const quotePrompts = [
-  'You are a wise thinker who crafts original, inspiring, and thought-provoking quotes.Write one short quote that has never been written before.It can be about life, success, motivation, happiness, or learning.Keep it concise, memorable, and impactful.Avoid clichés and repeated ideas.Pick a slightly different perspective or theme each time for uniqueness. Only return the quote itself, no explanations or introductions.'
-];
+const jokePrompt = `
+Generate one original, clean, family-friendly dad joke.
+
+Requirements:
+- Maximum 2 lines
+- Funny and clever
+- No offensive content
+- Do not explain the joke
+- Return only the joke text
+`;
+
+const quotePrompt = `
+Generate one original motivational quote.
+
+Requirements:
+- Maximum 20 words
+- Powerful and memorable
+- No clichés
+- No quotation marks
+- Return only the quote
+`;
 
 function getRandomJokePrompt() {
   return jokePrompts[Math.floor(Math.random() * jokePrompts.length)];
@@ -43,7 +65,11 @@ app.post("/api/joke", async (req, res) => {
     const prompt = getRandomJokePrompt();
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt
+      contents: prompt,
+      config: {
+        temperature: 0.8,
+        maxOutputTokens: 50
+      }
     });
 
     res.json({ text:response.candidates[0].content.parts[0].text });
@@ -58,7 +84,11 @@ app.post("/api/shayari", async (req, res) => {
     const prompt = getRandomShayariPrompt();
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt
+      contents: prompt,
+      config: {
+        temperature: 0.8,
+        maxOutputTokens: 50
+      }
     });
 
     res.json({ text:response.candidates[0].content.parts[0].text });
