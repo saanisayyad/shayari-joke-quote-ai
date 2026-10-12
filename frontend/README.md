@@ -16,7 +16,7 @@ A minimalist AI-powered thought generator serving original, late-night philosoph
 
 - React + Vite + Tailwind CSS
 - Node.js + Express
-- Groq API using `groq-sdk` (default model: `llama-3.3-70b-versatile`)
+- Groq API using `groq-sdk` (default model: `openai/gpt-oss-120b`)
 
 ## Run locally
 
