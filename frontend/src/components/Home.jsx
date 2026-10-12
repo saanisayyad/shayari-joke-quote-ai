@@ -74,9 +74,6 @@ const Home = () => {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-200">
                   The Unquiet Mind
                 </p>
-                <p className="mt-0.5 text-[10px] tracking-wide text-stone-500">
-                  Notes from the void
-                </p>
               </div>
             </div>
             <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.16em] text-stone-500">
@@ -143,11 +140,6 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="relative z-10 mt-6 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.22em] text-stone-600 sm:mt-7">
-        <span className="h-px w-5 bg-stone-800" />
-        Stay curious, stay a little unsettled
-        <span className="h-px w-5 bg-stone-800" />
-      </div>
     </main>
   );
 };
