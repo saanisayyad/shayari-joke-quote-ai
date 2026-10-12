@@ -127,8 +127,7 @@ const thinkers = [
   "Ayn Rand",
   "Ursula K. Le Guin",
   "Octavia E. Butler",
-  "Mary Shelley",
-  "Fyodor Dostoevsky"
+  "Mary Shelley"
 ];
 
 const groq = new Groq({
