@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";
 
 dotenv.config();
 
@@ -22,8 +22,8 @@ const thinkers = [
   "Leo Tolstoy"
 ];
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.API_KEY
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY
 });
 
 app.get("/api/health", (req, res) => {
@@ -45,51 +45,54 @@ Style:
 
   // Retry once if the model appears to have returned a cut-off thought.
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.85,
-        maxOutputTokens: 256
-      }
+    const response = await groq.chat.completions.create({
+      model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: "You write original, concise philosophical thoughts. Return complete sentences only."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.85,
+      max_tokens: 256
     });
 
-    const candidate = response?.candidates?.[0];
-    const thought = response?.text?.trim()
-      || candidate?.content?.parts
-        ?.map((part) => part.text || "")
-        .join("")
-        .trim();
+    const choice = response?.choices?.[0];
+    const thought = choice?.message?.content?.trim();
 
     if (!thought) {
-      console.warn("Gemini returned an empty thought.", {
-        finishReason: candidate?.finishReason
+      console.warn("Groq returned an empty thought.", {
+        finishReason: choice?.finish_reason
       });
       continue;
     }
 
-    const wasTokenLimited = candidate?.finishReason === "MAX_TOKENS";
+    const wasTokenLimited = choice?.finish_reason === "length";
     const endsLikeACompleteSentence = /[.!?…]["')\]]?$/.test(thought);
 
     if (!wasTokenLimited && endsLikeACompleteSentence) {
       return thought;
     }
 
-    console.warn("Gemini returned a possibly incomplete thought; retrying.", {
+    console.warn("Groq returned a possibly incomplete thought; retrying.", {
       attempt: attempt + 1,
-      finishReason: candidate?.finishReason,
+      finishReason: choice?.finish_reason,
       thought
     });
   }
 
-  throw new Error("Gemini did not return a complete thought after retrying.");
+  throw new Error("Groq did not return a complete thought after retrying.");
 }
 
 app.post("/api/thought", async (req, res) => {
   try {
-    if (!process.env.API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return res.status(500).json({
-        error: "The AI service is not configured. Add API_KEY to the backend environment."
+        error: "The AI service is not configured. Add GROQ_API_KEY to the backend environment."
       });
     }
 
