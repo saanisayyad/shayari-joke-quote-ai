@@ -2,13 +2,13 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="relative z-10 mt-auto flex w-full items-center justify-center gap-5 border-t border-white/[0.045] px-5 py-5 text-[10px] text-stone-600 sm:py-6 sm:text-xs">
+    <footer className="relative z-10 mx-auto flex w-full max-w-[1440px] items-center justify-center gap-5 border-t border-white/[0.08] px-5 py-4 text-[10px] text-[#77796d] sm:py-5 sm:text-xs">
       <a
         href="https://github.com/saanisayyad?tab=repositories"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="GitHub profile"
-        className="rounded-full p-2 transition hover:bg-white/[0.05] hover:text-rose-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-200"
+        className="rounded-full p-2 transition hover:bg-white/[0.05] hover:text-[#c7f36b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c7f36b]"
       >
         <FaGithub className="size-4 sm:size-[18px]" />
       </a>
@@ -18,7 +18,7 @@ const Footer = () => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="LinkedIn profile"
-        className="rounded-full p-2 transition hover:bg-white/[0.05] hover:text-rose-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-200"
+        className="rounded-full p-2 transition hover:bg-white/[0.05] hover:text-[#c7f36b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c7f36b]"
       >
         <FaLinkedin className="size-4 sm:size-[18px]" />
       </a>
