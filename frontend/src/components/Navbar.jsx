@@ -11,7 +11,6 @@ export default function Navbar() {
           The Unquiet Mind
         </span>
       </Link>
-      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#77796d]">Est. inside your head</span>
     </nav>
   );
 }
