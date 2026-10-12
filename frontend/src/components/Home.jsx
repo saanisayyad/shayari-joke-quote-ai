@@ -28,7 +28,7 @@ const Home = () => {
   const copyThought = async () => {
     if (!thought) return;
     try {
-      await navigator.clipboard.writeText(thought);
+      await navigator.clipboard.writeText(thinker ? `${thought}\n— ${thinker}` : thought);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch (err) {
@@ -48,9 +48,6 @@ const Home = () => {
         <h1 className="max-w-4xl text-4xl font-black leading-tight tracking-tight text-stone-100 sm:text-6xl md:text-7xl">
           Existential <span className="text-rose-300">Damage.</span>
         </h1>
-        <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-stone-400 sm:text-base">
-          Kafka, Dostoevsky, Nietzsche, Camus — the minds that made being human feel suspiciously complicated.
-        </p>
       </div>
 
       <section className="relative z-10 w-full max-w-2xl rounded-3xl border border-white/10 bg-stone-900/80 p-6 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-10">
@@ -64,14 +61,11 @@ const Home = () => {
         <div className="flex min-h-44 flex-col justify-center">
           {thought ? (
             <>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-rose-300">
+                {thinker}
+              </p>
               <p className="whitespace-pre-wrap text-xl leading-relaxed text-stone-100 sm:text-2xl">
                 {thought}
-              </p>
-              <p className="mt-6 text-sm text-rose-300">
-                Inspired by the themes of <span className="font-semibold">{thinker}</span>
-              </p>
-              <p className="mt-2 text-xs text-stone-600">
-                An original AI-generated thought, not an authentic quotation.
               </p>
             </>
           ) : (
@@ -105,10 +99,6 @@ const Home = () => {
           )}
         </div>
       </section>
-
-      <p className="relative z-10 mt-7 text-center text-xs tracking-wide text-stone-600">
-        Not their words. Just thoughts from the same dark corners.
-      </p>
     </main>
   );
 };
