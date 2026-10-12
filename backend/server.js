@@ -9,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// A broad mix of philosophers, writers, psychologists, and thinkers.
 const thinkers = [
   "Franz Kafka",
   "Fyodor Dostoevsky",
@@ -19,7 +20,115 @@ const thinkers = [
   "Søren Kierkegaard",
   "Arthur Schopenhauer",
   "Simone de Beauvoir",
-  "Leo Tolstoy"
+  "Leo Tolstoy",
+  "Jean-Paul Sartre",
+  "Marcel Proust",
+  "George Orwell",
+  "Aldous Huxley",
+  "Samuel Beckett",
+  "Milan Kundera",
+  "Thomas Mann",
+  "Rainer Maria Rilke",
+  "Johann Wolfgang von Goethe",
+  "William Shakespeare",
+  "Dante Alighieri",
+  "Miguel de Unamuno",
+  "Fernando Pessoa",
+  "Clarice Lispector",
+  "Jorge Luis Borges",
+  "Gabriel García Márquez",
+  "José Saramago",
+  "Julio Cortázar",
+  "Haruki Murakami",
+  "Osamu Dazai",
+  "Yukio Mishima",
+  "Yasunari Kawabata",
+  "Kenzaburō Ōe",
+  "James Baldwin",
+  "Toni Morrison",
+  "Maya Angelou",
+  "Sylvia Plath",
+  "Emily Dickinson",
+  "Walt Whitman",
+  "Edgar Allan Poe",
+  "Herman Melville",
+  "Mark Twain",
+  "Ralph Waldo Emerson",
+  "Henry David Thoreau",
+  "William James",
+  "Carl Jung",
+  "Sigmund Freud",
+  "Viktor Frankl",
+  "Erich Fromm",
+  "Rollo May",
+  "Abraham Maslow",
+  "Hannah Arendt",
+  "Michel Foucault",
+  "Jacques Derrida",
+  "Gilles Deleuze",
+  "Judith Butler",
+  "bell hooks",
+  "Frantz Fanon",
+  "Cornel West",
+  "Byung-Chul Han",
+  "Mark Fisher",
+  "Plato",
+  "Aristotle",
+  "Socrates",
+  "Marcus Aurelius",
+  "Seneca",
+  "Epictetus",
+  "Epicurus",
+  "Heraclitus",
+  "Diogenes",
+  "Confucius",
+  "Laozi",
+  "Zhuangzi",
+  "Sun Tzu",
+  "Mencius",
+  "Nagarjuna",
+  "Gautama Buddha",
+  "Rumi",
+  "Omar Khayyam",
+  "Khalil Gibran",
+  "Rabindranath Tagore",
+  "Jiddu Krishnamurti",
+  "Swami Vivekananda",
+  "Sri Aurobindo",
+  "Mirza Ghalib",
+  "B. R. Ambedkar",
+  "Mahatma Gandhi",
+  "Premchand",
+  "Saadat Hasan Manto",
+  "Ismat Chughtai",
+  "Amrita Pritam",
+  "Mahasweta Devi",
+  "R. K. Narayan",
+  "Arundhati Roy",
+  "Chinua Achebe",
+  "Wole Soyinka",
+  "Ngũgĩ wa Thiong'o",
+  "Federico García Lorca",
+  "Octavio Paz",
+  "Pablo Neruda",
+  "Simone Weil",
+  "Mary Wollstonecraft",
+  "John Stuart Mill",
+  "Thomas Hobbes",
+  "John Locke",
+  "Baruch Spinoza",
+  "David Hume",
+  "Immanuel Kant",
+  "Georg Wilhelm Friedrich Hegel",
+  "Karl Marx",
+  "Walter Benjamin",
+  "Susan Sontag",
+  "Iris Murdoch",
+  "Ayn Rand",
+  "Ursula K. Le Guin",
+  "Octavia E. Butler",
+  "Mary Shelley",
+  "Fyodor Dostoevsky"
 ];
 
 const groq = new Groq({
@@ -31,35 +140,34 @@ app.get("/api/health", (req, res) => {
 });
 
 async function generateCompleteThought(thinker) {
-  const prompt = `Write one original, thought-provoking existential thought inspired by themes explored by ${thinker}.
+  const prompt = `Write one original, thoughtful idea loosely inspired by themes associated with ${thinker}.
 
-Style:
-- Introspective, darkly witty, philosophical, and emotionally sharp
-- One or two concise, complete sentences
-- Make it feel like a striking late-night realization
-- Finish every sentence fully and end with proper punctuation
-- Never stop mid-word or mid-sentence
-- Do not imitate or claim to reproduce the person's exact writing
-- Do not present it as a real quote or use quotation marks
-- Return only the thought, with no heading or explanation`;
+Rules:
+- Use simple, everyday English that most people can understand.
+- Keep it short: one or two complete sentences.
+- Make it thoughtful, emotionally sharp, and memorable.
+- Use clear words; avoid academic language, complicated metaphors, and confusing phrasing.
+- Create a new thought. Do not copy, paraphrase, or imitate any real quote or passage.
+- Do not claim the thinker said or wrote this thought.
+- Do not include the thinker's name in the thought itself.
+- End with proper punctuation.
+- Return only the thought, without a heading or quotation marks.`;
 
-  // Retry once if the model appears to have returned a cut-off thought.
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const response = await groq.chat.completions.create({
-      // Groq retired llama-3.3-70b-versatile on August 16, 2026.
       model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
       messages: [
         {
           role: "system",
-          content: "You write original, concise philosophical thoughts. Return complete sentences only."
+          content: "Write original philosophical thoughts in simple, natural English. Avoid obscure words. Always return complete sentences."
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      temperature: 0.85,
-      max_tokens: 256
+      temperature: 0.9,
+      max_tokens: 180
     });
 
     const choice = response?.choices?.[0];
