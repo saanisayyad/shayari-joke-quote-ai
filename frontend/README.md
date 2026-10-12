@@ -1,12 +1,75 @@
-# React + Vite
+# The Unquiet Mind — Existential Damage
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimalist AI-powered thought generator serving original, late-night philosophical thoughts inspired by the themes explored by thinkers and writers such as Franz Kafka, Fyodor Dostoevsky, Friedrich Nietzsche, Albert Camus, Hermann Hesse, Virginia Woolf, Søren Kierkegaard, Arthur Schopenhauer, Simone de Beauvoir, and Leo Tolstoy.
 
-Currently, two official plugins are available:
+> These are original AI-generated thoughts inspired by a thinker's themes, not authentic quotations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Generate one random existential thought at a time
+- A randomly selected thinker for each generation
+- Copy thoughts to the clipboard
+- Minimal dark UI with a rose accent
+- Express backend errors in the interface
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech stack
+
+- React + Vite + Tailwind CSS
+- Node.js + Express
+- Google Gemini API (`gemini-2.5-flash`)
+
+## Run locally
+
+### 1. Backend
+
+```bash
+cd backend
+npm install
+```
+
+Create `backend/.env`:
+
+```env
+API_KEY=your_gemini_api_key
+PORT=5000
+```
+
+Start the backend:
+
+```bash
+npm run dev
+```
+
+Health check: `http://localhost:5000/api/health`
+
+### 2. Frontend
+
+In a second terminal:
+
+```bash
+cd frontend
+npm install
+```
+
+Create `frontend/.env`:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Start Vite:
+
+```bash
+npm run dev
+```
+
+## Deployment
+
+- Set `API_KEY` in the backend host's environment variables.
+- Set `VITE_API_URL` in the frontend host to the deployed backend's base URL, without a trailing slash.
+- Redeploy the frontend after changing `VITE_API_URL`, because Vite embeds it at build time.
+
+## API
+
+- `GET /api/health` — confirms the backend is running.
+- `POST /api/thought` — generates a thought and returns `thought`, `thinker`, and `inspiredBy`.
