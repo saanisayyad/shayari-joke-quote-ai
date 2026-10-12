@@ -4,113 +4,76 @@ import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const thinkers = [
+  "Franz Kafka",
+  "Fyodor Dostoevsky",
+  "Friedrich Nietzsche",
+  "Albert Camus",
+  "Hermann Hesse",
+  "Virginia Woolf",
+  "Søren Kierkegaard",
+  "Arthur Schopenhauer",
+  "Simone de Beauvoir",
+  "Leo Tolstoy"
+];
 
 const ai = new GoogleGenAI({
   apiKey: process.env.API_KEY
 });
 
-// Prompt arrays
-const shayariPrompt = `
-Generate one original emotional shayari.
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", service: "The Unquiet Mind" });
+});
 
-Requirements:
-- Hindi or Urdu words written in English script
-- 2 to 4 lines only
-- Theme can be love, friendship, motivation, life, nature, or dreams
-- Deep and meaningful
-- No emojis
-- Return only the shayari
-`;
-
-const jokePrompt = `
-Generate one original pickup line.
-
-Requirements:
-- Hindi written in English script
-- Funny, cute, or romantic
-- One or two lines only
-- No emojis
-- Return only the pickup line
-`;
-
-const quotePrompt = `
-Generate one original motivational quote.
-
-Requirements:
-- Maximum 20 words
-- Powerful and memorable
-- No clichés
-- No quotation marks
-- Return only the quote
-`;
-
-function getRandomJokePrompt() {
-  return jokePrompts[Math.floor(Math.random() * jokePrompts.length)];
-}
-
-function getRandomShayariPrompt() {
-  return shayariPrompts[Math.floor(Math.random() * shayariPrompts.length)];
-}
-
-function getRandomQuotePrompt() {
-  return quotePrompts[Math.floor(Math.random() * quotePrompts.length)];
-}
-
-// API endpoint
-app.post("/api/joke", async (req, res) => {
+app.post("/api/thought", async (req, res) => {
   try {
-    const prompt = getRandomJokePrompt();
+    if (!process.env.API_KEY) {
+      return res.status(500).json({
+        error: "The AI service is not configured. Add API_KEY to the backend environment."
+      });
+    }
+
+    const thinker = thinkers[Math.floor(Math.random() * thinkers.length)];
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt,
+      contents: `Write one original, thought-provoking existential thought inspired by themes explored by ${thinker}.
+
+Style:
+- Introspective, darkly witty, philosophical, and emotionally sharp
+- One to three short sentences
+- Make it feel like a striking late-night realization
+- Do not imitate or claim to reproduce the person's exact writing
+- Do not present it as a real quote or use quotation marks
+- Return only the thought, with no heading or explanation`,
       config: {
-        temperature: 0.8,
-        maxOutputTokens: 50
+        temperature: 0.95,
+        maxOutputTokens: 120
       }
     });
 
-    res.json({ text:response.candidates[0].content.parts[0].text });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
+    const thought = response?.text?.trim()
+      || response?.candidates?.[0]?.content?.parts
+        ?.map((part) => part.text || "")
+        .join("")
+        .trim();
 
-app.post("/api/shayari", async (req, res) => {
-  try {
-    const prompt = getRandomShayariPrompt();
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.8,
-        maxOutputTokens: 50
-      }
+    if (!thought) {
+      throw new Error("The model returned an empty response.");
+    }
+
+    res.json({ thought, thinker, inspiredBy: true });
+  } catch (err) {
+    console.error("Thought generation failed:", err);
+    res.status(500).json({
+      error: "Could not summon a thought right now. Please try again."
     });
-
-    res.json({ text:response.candidates[0].content.parts[0].text });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-app.post("/api/quote", async (req, res) => {
-  try {
-    const prompt = getRandomQuotePrompt();
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt
-    });
-
-    res.json({ text:response.candidates[0].content.parts[0].text });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
-
-app.listen(5000, () => console.log("Backend running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`The Unquiet Mind backend is running on port ${PORT}`));
