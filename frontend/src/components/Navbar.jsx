@@ -2,21 +2,14 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className=" flex items-center rounded-full justify-between mt-10 md:mt-5 py-4 px-10 gap-5">
-      <Link to="/api/joke">
-        <div className='bg-white/10 px-3 py-2 text-center rounded-full hover:scale-105 duration-300 cursor-pointer text-white/70'>
-          Joke
-        </div>
-      </Link>
-      <Link to="/api/shayari">
-        <div className='bg-white/10 px-3 py-2 text-center rounded-full hover:scale-105 duration-300 cursor-pointer text-white/70'>
-      Shayari
-    </div>
-      </Link>
-      <Link to="/api/quote">
-        <div className='bg-white/10 px-3 py-2 text-center rounded-full hover:scale-105 duration-300 cursor-pointer text-white/70'>
-      Quote
-    </div>
+    <nav className="relative z-10 flex w-full max-w-6xl items-center justify-center px-6 pt-7 sm:justify-start sm:px-10">
+      <Link to="/" className="group flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-rose-300/30 bg-rose-300/10 text-lg text-rose-200 transition group-hover:bg-rose-300/20">
+          ∴
+        </span>
+        <span className="text-sm font-bold uppercase tracking-[0.22em] text-stone-200">
+          The Unquiet Mind
+        </span>
       </Link>
     </nav>
   );
