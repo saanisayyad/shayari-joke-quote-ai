@@ -11,10 +11,6 @@ export default function Navbar() {
           The Unquiet Mind
         </span>
       </Link>
-      <span className="hidden items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-stone-600 sm:flex">
-        <span className="h-1.5 w-1.5 rounded-full bg-rose-200/80" />
-        A quiet corner of the internet
-      </span>
     </nav>
   );
 }
