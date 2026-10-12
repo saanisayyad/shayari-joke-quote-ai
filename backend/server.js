@@ -46,7 +46,8 @@ Style:
   // Retry once if the model appears to have returned a cut-off thought.
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const response = await groq.chat.completions.create({
-      model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+      // Groq retired llama-3.3-70b-versatile on August 16, 2026.
+      model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
       messages: [
         {
           role: "system",
