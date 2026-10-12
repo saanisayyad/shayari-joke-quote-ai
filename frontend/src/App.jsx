@@ -1,38 +1,18 @@
-import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { Route, Routes } from "react-router";
-import Joke from "./components/Joke";
-import Shayari from "./components/Shayari";
-import Quote from "./components/Quote";
-import './index.css'
+import "./index.css";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
 
 export default function App() {
-  const [message, setMessage] = useState('');
-
-const displayMessage = () => {
-  setMessage("Copied to clipboard!");
-  setTimeout(() => {
-    setMessage('');
-  }, 2000);
-};
-
   return (
-    <div className="bg-gray-800 min-h-screen flex flex-col items-center">
-        {message && (
-          <div className="absolute top-4 text-white/70 animate-slideDown z-20">
-            {message}
-          </div>
-        )}
-        <Navbar/>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/api/joke" element={<Joke showMessage={displayMessage} />} />
-          <Route path="/api/shayari" element={<Shayari showMessage={displayMessage} />} />
-          <Route path="/api/quote" element={<Quote showMessage={displayMessage} />} />
-        </Routes>
-        <Footer/>
+    <div className="flex min-h-screen flex-col items-center overflow-hidden bg-[#0c0b0d] text-stone-100">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<Home />} />
+      </Routes>
+      <Footer />
     </div>
   );
 }
