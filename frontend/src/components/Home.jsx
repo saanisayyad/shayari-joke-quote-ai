@@ -149,11 +149,6 @@ const Home = () => {
           </section>
         </div>
 
-        <div className="editorial-endline mt-12 flex items-center justify-between gap-4 sm:mt-16">
-          <span>FOR THE BEAUTIFULLY OVERTHOUGHT.</span>
-          <span className="hidden sm:inline">SCROLL LESS. THINK MORE.</span>
-          <span aria-hidden="true" className="text-lg text-[#c7f36b]">↘</span>
-        </div>
       </div>
     </main>
   );
