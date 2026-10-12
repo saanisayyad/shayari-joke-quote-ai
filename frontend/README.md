@@ -1,14 +1,13 @@
 # The Unquiet Mind — Existential Damage
 
-A minimalist AI-powered thought generator serving original, late-night philosophical thoughts inspired by the themes explored by thinkers and writers such as Franz Kafka, Fyodor Dostoevsky, Friedrich Nietzsche, Albert Camus, Hermann Hesse, Virginia Woolf, Søren Kierkegaard, Arthur Schopenhauer, Simone de Beauvoir, and Leo Tolstoy.
-
-> These are original AI-generated thoughts inspired by a thinker's themes, not authentic quotations.
+A minimalist AI-powered thought generator that creates original, short philosophical thoughts in simple English. Each thought is paired with one of more than 100 philosophers, writers, psychologists, and other thinkers.
 
 ## Features
 
-- Generate one random existential thought at a time
-- A randomly selected thinker for each generation
-- Copy thoughts to the clipboard
+- Generate one random thought at a time
+- Draws from a pool of 100+ thinkers
+- Simple, clear English rather than academic wording
+- Copy the thought together with the displayed thinker's name
 - Minimal dark UI with a rose accent
 - Express backend errors in the interface
 
@@ -31,8 +30,8 @@ Create `backend/.env`:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
-# Optional: override the default model
-# GROQ_MODEL=llama-3.3-70b-versatile
+# Optional: override the default model with one available to your account
+# GROQ_MODEL=openai/gpt-oss-120b
 PORT=5000
 ```
 
