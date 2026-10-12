@@ -16,7 +16,7 @@ A minimalist AI-powered thought generator serving original, late-night philosoph
 
 - React + Vite + Tailwind CSS
 - Node.js + Express
-- Google Gemini API (`gemini-2.5-flash`)
+- Groq API using `groq-sdk` (default model: `llama-3.3-70b-versatile`)
 
 ## Run locally
 
@@ -30,9 +30,13 @@ npm install
 Create `backend/.env`:
 
 ```env
-API_KEY=your_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+# Optional: override the default model
+# GROQ_MODEL=llama-3.3-70b-versatile
 PORT=5000
 ```
+
+Get a key from the [Groq Console](https://console.groq.com/). Keep the key in the backend environment only; never expose it in frontend code or commit it to Git.
 
 Start the backend:
 
@@ -65,9 +69,11 @@ npm run dev
 
 ## Deployment
 
-- Set `API_KEY` in the backend host's environment variables.
+- Set `GROQ_API_KEY` in the backend host's environment variables.
+- Optionally set `GROQ_MODEL` to an active model available to your Groq account.
 - Set `VITE_API_URL` in the frontend host to the deployed backend's base URL, without a trailing slash.
 - Redeploy the frontend after changing `VITE_API_URL`, because Vite embeds it at build time.
+- After changing backend environment variables, restart or redeploy the backend so they take effect.
 
 ## API
 
